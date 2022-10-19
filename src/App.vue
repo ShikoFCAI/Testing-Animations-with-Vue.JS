@@ -3,6 +3,12 @@
     <div class="block" :class="{animate: animatedBlock}"></div>
     <button @click="animateBlock">Animate</button>
   </div>
+  <div class="container">
+    <transition>
+      <p v-if="paragraphVisible">This is a test paragraph</p>
+    </transition>
+    <button @click="toggleParagraph">Show Paragraph</button>
+  </div>
   <base-modal @close="hideDialog" v-if="dialogIsVisible">
     <p>This is a test dialog!</p>
     <button @click="hideDialog">Close it!</button>
@@ -15,13 +21,17 @@
 <script>
 export default {
   data() {
-    return { 
+    return {
       animatedBlock: false,
-      dialogIsVisible: false 
+      dialogIsVisible: false,
+      paragraphVisible: false,
     };
   },
   methods: {
-    animateBlock(){
+    toggleParagraph() {
+      this.paragraphVisible = !this.paragraphVisible;
+    },
+    animateBlock() {
       this.animatedBlock = !this.animatedBlock;
     },
     showDialog() {
@@ -38,12 +48,15 @@ export default {
 * {
   box-sizing: border-box;
 }
+
 html {
   font-family: sans-serif;
 }
+
 body {
   margin: 0;
 }
+
 button {
   font: inherit;
   padding: 0.5rem 2rem;
@@ -53,11 +66,13 @@ button {
   color: white;
   cursor: pointer;
 }
+
 button:hover,
 button:active {
   background-color: #a80b48;
   border-color: #a80b48;
 }
+
 .block {
   width: 8rem;
   height: 8rem;
@@ -65,6 +80,7 @@ button:active {
   margin-bottom: 2rem;
   /* transition: transform 0.3s ease-out; */
 }
+
 .container {
   max-width: 40rem;
   margin: 2rem auto;
@@ -76,19 +92,47 @@ button:active {
   border: 2px solid #ccc;
   border-radius: 12px;
 }
-.animate{
+
+.animate {
   /* transform: translateX(-150px); */
   animation: slide-fade 1s ease-out forwards;
 }
 
-@keyframes slide-fade{
-  0%{
+.v-enter-from{
+  transform: translateY(-30px);
+  opacity: 0;
+}
+.v-enter-active{
+  transition: all 0.2s ease-out;
+}
+.v-enter-to{
+  transform: translateY(0px);
+  opacity: 1;
+}
+
+.v-leave-from{
+  transform: translateY(0px);
+  opacity: 1;
+}
+.v-leave-active{
+  transition: all 0.2s ease-in;
+}
+.v-leave-to{
+  transform: translateY(30px);
+  opacity: 1;
+}
+
+
+@keyframes slide-fade {
+  0% {
     transform: translateX(0) scale(1);
   }
-  70%{
+
+  70% {
     transform: translateX(-120px) scale(1.2);
   }
-  100%{
+
+  100% {
     transform: translateX(-150px) scale(1);
   }
 
