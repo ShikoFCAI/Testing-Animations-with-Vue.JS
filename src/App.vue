@@ -4,12 +4,18 @@
     <button @click="animateBlock">Animate</button>
   </div>
   <div class="container">
-    <transition>
+    <transition name="para">
       <p v-if="paragraphVisible">This is a test paragraph</p>
     </transition>
     <button @click="toggleParagraph">Show Paragraph</button>
   </div>
-  <base-modal @close="hideDialog" v-if="dialogIsVisible">
+  <div class="container">
+    <transition name="button-fade" mode="out-in">
+      <button @click="showButton" v-if="!buttonVisible"> Show Users</button>
+      <button @click="hideButton" v-else> Hide Users</button>
+    </transition>
+  </div>
+  <base-modal @close="hideDialog" :open="dialogIsVisible">
     <p>This is a test dialog!</p>
     <button @click="hideDialog">Close it!</button>
   </base-modal>
@@ -25,9 +31,16 @@ export default {
       animatedBlock: false,
       dialogIsVisible: false,
       paragraphVisible: false,
+      buttonVisible: false,
     };
   },
   methods: {
+    hideButton() {
+      this.buttonVisible = false;
+    },
+    showButton() {
+      this.buttonVisible = true;
+    },
     toggleParagraph() {
       this.paragraphVisible = !this.paragraphVisible;
     },
@@ -98,30 +111,48 @@ button:active {
   animation: slide-fade 1s ease-out forwards;
 }
 
-.v-enter-from{
+.para-enter-from {
   transform: translateY(-30px);
   opacity: 0;
 }
-.v-enter-active{
+
+.para-enter-active {
   transition: all 0.2s ease-out;
 }
-.v-enter-to{
+
+.para-enter-to {
   transform: translateY(0px);
   opacity: 1;
 }
 
-.v-leave-from{
+.para-leave-from {
   transform: translateY(0px);
   opacity: 1;
 }
-.v-leave-active{
+
+.para-leave-active {
   transition: all 0.2s ease-in;
 }
-.v-leave-to{
+
+.para-leave-to {
   transform: translateY(30px);
   opacity: 1;
 }
 
+.button-fade-enter-from,
+.button-fade-leave-to{
+  opacity: 0;
+}
+.button-fade-enter-active{
+  transition: opacity 0.3s ease-out;
+}
+.button-fade-leave-active{
+  transition: opacity 0.3s ease-in;
+}
+.button-fade-enter-to,
+.button-fade-leave-from{
+  opacity: 1;
+}
 
 @keyframes slide-fade {
   0% {
